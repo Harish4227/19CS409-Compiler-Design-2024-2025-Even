@@ -1,83 +1,77 @@
 
-# Ex-3-RECOGNITION-OF-A-VALID-ARITHMETIC-EXPRESSION-THAT-USES-OPERATOR-AND-USING-YACC
-# Reg. No: 212224220034
+# Ex-4-LETTER-FOLLOWED-BY-ANY-NUMBER-OF-LETTERS-OR-DIGITS-USING-YACC
+RECOGNITION OF A VALID VARIABLE WHICH STARTS WITH A LETTER FOLLOWED BY ANY NUMBER OF LETTERS OR DIGITS USING YACC
 # Date: 24/03/2026
-# AIM
-To write a yacc program to recognize a valid arithmetic expression that uses operator +,- ,* and /.
+# Aim:
+To write a YACC program to recognize a valid variable which starts with a letter followed by any number of letters or digits.
 # ALGORITHM
 1.	Start the program.
 2.	Write a program in the vi editor and save it with .l extension.
-3.	In the lex program, write the translation rules for the operators =,+,-,*,/ and for the identifier.
+3.	In the lex program, write the translation rules for the keywords int, float and double and for the identifier.
 4.	Write a program in the vi editor and save it with .y extension.
 5.	Compile the lex program with lex compiler to produce output file as lex.yy.c. eg $ lex filename.l
-6.	Compile the yacc program with yacc compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
+6.	Compile the yacc program with YACC compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
 7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
-8.	Enter an arithmetic expression as input and the tokens are identified as output.
+8.	Enter a statement as input and the valid variables are identified as output.
 # PROGRAM
-
-## cdex3.l
+# l file:
 ```
 %{
 #include "y.tab.h"
+#include <string.h>
 %}
 
-digit   [0-9]
 %%
-[ \t\n]+        ; // Ignore whitespace
-{digit}+        { yylval = atoi(yytext); return NUMBER; }
-[\+\-\*/]       { return *yytext; }
-\(              { return '('; }
-\)              { return ')'; }
-.               { return 0; }
+[a-zA-Z][a-zA-Z0-9]*    { yylval.str = strdup(yytext); return IDENTIFIER; }
+\n                      { return '\n'; }
+.                       { return yytext[0]; }
 %%
-int yywrap() { return 1; }
-```
 
-## cdex3.y
+int yywrap() {
+    return 1;
+}
+
+```
+# y file:
 ```
 %{
 #include <stdio.h>
 #include <stdlib.h>
-void yyerror(const char *s);
-int yylex(void);
+#include <string.h>
+
+extern int yylex();
+void yyerror(const char *msg);
+
 %}
 
-%token NUMBER
-
-%%
-expr:   expr '+' term
-        | expr '-' term
-        | term
-        ;
-
-term:   term '*' factor
-        | term '/' factor
-        | factor
-        ;
-
-factor: '(' expr ')'
-        | NUMBER
-        ;
-
-%%
-
-void yyerror(const char *s) {
-    printf("Invalid arithmetic expression.\n");
+%union {
+    char *str;
 }
+
+%token <str> IDENTIFIER
+
+%%
+start:
+    IDENTIFIER '\n' {
+        printf("Valid variable: %s\n", $1);
+        free($1);  // clean up strdup memory
+    }
+    ;
+%%
 
 int main() {
-    printf("Enter an arithmetic expression: ");
-    if (yyparse() == 0)
-        printf("Valid arithmetic expression.\n");
-    return 0;
+    printf("Enter a variable name:\n");
+    return yyparse();
 }
+
+void yyerror(const char *msg) {
+    printf("Invalid variable name\n");
+}
+
 ```
+# Output
+<img width="786" height="453" alt="image" src="https://github.com/user-attachments/assets/e0c83419-11f2-40ee-811c-82205906607a" />
 
 
-# OUTPUT
-
-<img width="1469" height="751" alt="Screenshot 2025-09-19 160649" src="https://github.com/user-attachments/assets/e8b89680-1ef8-40e5-8ec2-ff14348ffd45" />
-
-
-# RESULT
-A YACC program to recognize a valid arithmetic expression that uses operator +,-,* and / is executed successfully and the output is verified.
+# Result
+A YACC program to recognize a valid variable which starts with a letter followed by any number of letters or digits is executed successfully and the output is verified.
