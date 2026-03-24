@@ -1,80 +1,68 @@
-
-# Ex-5-RECOGNITION-OF-THE-GRAMMAR-anb-where-n-10-USING-YACC
-RECOGNITION OF THE GRAMMAR(anb where n>=10) USING YACC
-## Date: 24/03/2026
-## Reg.No: 212224220034
-# Aim:
-To write a YACC program to recognize the grammar anb where n>=10.
+# Ex-6-IMPLEMENTATION-OF-THE-BACK-END-OF-THE-COMPILER-
+IMPLEMENTATION OF THE BACK END OF THE COMPILER 
+## Reg no : 212224220034
+# Aim :
+To write a program to implement the back end of the compiler.
 # ALGORITHM
-1.	Start the program.
-2.	Write a program in the vi editor and save it with .l extension.
-3.	In the lex program, write the translation rules for the variables a and b.
-4.	Write a program in the vi editor and save it with .y extension.
-5.	Compile the lex program with lex compiler to produce output file as lex.yy.c. eg $ lex filename.l
-6.	Compile the yacc program with yacc compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
-7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
-8.	Enter a string as input and it is identified as valid or invalid.
-# PROGRAM:
-L File
-``` c
-%{
-#include "y.tab.h"
-%}
+1. Start the program.
+2. Get the three variables from statements and stored in the text file k.txt.
+3. Compile the program and give the path of the source file.
+4. Execute the program.
+5. Target code for the given statement is produced.
+6. Stop the program.
+# PROGRAM
 
-%%
-a   { return A; }
-b   { return B; }
-\n  { return '\n'; }
-.   { return yytext[0]; }
-%%
+## ex6.c file
 
-int yywrap() {
-    return 1;
-}
 ```
-
-Y File
-``` c
-%{
-#include <stdio.h>
+#include <stdio.h> 
+#include <ctype.h> 
 #include <stdlib.h>
-int count = 0;  // to count number of a's
-%}
-
-%token A B
-
-%%
-start:
-    sequence B '\n' {
-        if (count >= 10) {
-            printf("Valid string: %d a's followed by b\n", count);
-        } else {
-            printf("Invalid: Less than 10 a's\n");
-        }
-        count = 0; // reset for next input
-    }
-    ;
-
-sequence:
-    A { count++; }
-  | sequence A { count++; }
-  ;
-%%
 
 int main() {
-    printf("Enter a string (aⁿb where n >= 10):\n");
-    return yyparse();
+int i = 2, j = 0, k = 2, k1 = 0; char ip[10], kk[10];
+FILE *fp;
+
+printf("Enter the filename of the intermediate code: "); scanf("%s", kk);
+
+fp = fopen(kk, "r"); if (fp == NULL) {
+printf("\nError in opening the file\n"); return 1;
+}
+printf("\nStatement\tTarget Code\n\n"); while (fscanf(fp, "%s", ip) != EOF) {
+printf("%s\tMOV %c,R%d SUB ", ip, ip[i + k], j);
+
+if (ip[i + 1] == '+')
+printf("ADD "); else
+printf("SUB ");
+
+if (islower(ip[i])) printf("%c,R%d\n", ip[i + k1], j);
+else
+printf("%c,%c\n", ip[i], ip[i + 2]);
+j++;
+k1 = 2;
+k = 0;
 }
 
-void yyerror(const char *msg) {
-    printf("Syntax error: %s\n", msg);
+fclose(fp);
+ 
+return 0;
 }
 ```
 
+## ex6.txt file
+
+```
+X=a-b 
+Y=a-c 
+Z=a+b 
+C=a-b 
+C=a-b
+```
+
+
 # OUTPUT
+![image](https://github.com/user-attachments/assets/2ebb0a9e-5747-4cbd-bfc7-e83a733bbf8e)
 
-<img width="745" height="756" alt="image" src="https://github.com/user-attachments/assets/3dc253cc-4e27-444f-aa7f-f39f39d7c4ee" />
 
-
-# RESULT
-The YACC program to recognize the grammar anb where n>=10 is executed successfully and the output is verified.
+# Result
+The back end of the compiler is implemented successfully, and the output is verified.
